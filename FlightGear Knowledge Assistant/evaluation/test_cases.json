@@ -1,0 +1,73 @@
+{
+  "metadata": {
+    "project": "ISSFinder",
+    "version": "1.0",
+    "description": "Benchmark de evaluación para FlightGear Knowledge Assistant",
+    "total_cases": 9
+  },
+  "test_cases": [
+    {
+      "id": "TC-001",
+      "category": "historical_data_search",
+      "table": "kb",
+      "input": "¿Ha habido alguna incidencia con el piloto automático de la Cessna 172P?",
+      "expected_output": "Historical Summary: SR-2024-004 documenta inestabilidad del controlador PID del piloto automático en modo altitud en la Cessna 172P cuando la velocidad vertical supera 500 ft/min en el momento de activación. Recurring Patterns: Activación del piloto automático en condiciones de alta tasa de ascenso sin estabilización previa. Typical Resolutions: Estabilizar la aeronave en vuelo nivelado con velocidad vertical inferior a 200 ft/min antes de activar el modo altitud. Usar property tree /autopilot/settings/target-altitude-ft como workaround. Relevance to Current Case: Alta. El patrón coincide directamente con BUG-031. Confidence Level: 0.95"
+    },
+    {
+      "id": "TC-002",
+      "category": "historical_data_search",
+      "table": "kb",
+      "input": "¿Qué problemas conocidos hay con el ILS en FlightGear?",
+      "expected_output": "Historical Summary: SR-2024-006 documenta fallo de captura del localizador ILS en KLVK pista 25R. SR-2024-013 documenta indicación incorrecta del VOR durante tutorial IFR. Recurring Patterns: Confusión entre modos NAV y APR y entre radiales FROM y TO. Typical Resolutions: Sintonizar NAV1 a 109.75 MHz, activar modo APR y verificar distancia inferior a 18 NM. Relevance to Current Case: Alta para aproximaciones ILS. Media para navegación VOR. Confidence Level: 0.9"
+    },
+    {
+      "id": "TC-003",
+      "category": "historical_data_search",
+      "table": "kb",
+      "input": "¿Hay registros de problemas de rendimiento gráfico en Windows?",
+      "expected_output": "Historical Summary: SR-2024-001 documenta rendimiento inferior a 1 FPS en Windows 11 con tarjeta Intel UHD integrada. Recurring Patterns: Hardware integrado sin soporte OpenGL certificado. Typical Resolutions: Actualizar drivers y reducir opciones gráficas. Relevance to Current Case: Alta para sistemas Windows con GPU integrada. Confidence Level: 0.95"
+    },
+    {
+      "id": "TC-004",
+      "category": "historical_data_search",
+      "table": "kb",
+      "input": "¿Qué incidencias hay relacionadas con el joystick en Linux?",
+      "expected_output": "Historical Summary: SR-2024-005 documenta joystick no reconocido en Ubuntu 24.04 por cambios en permisos del grupo input. Recurring Patterns: Usuario sin permisos suficientes sobre dispositivos de entrada. Typical Resolutions: Añadir usuario al grupo input y reiniciar sesión. Relevance to Current Case: Alta para distribuciones Linux recientes. Confidence Level: 0.95"
+    },
+    {
+      "id": "TC-005",
+      "category": "problem_analysis",
+      "table": "kb",
+      "input": "El helicóptero Bo105 pierde sustentación bruscamente durante el descenso vertical y no puedo recuperarlo.",
+      "expected_output": "Reported Behavior: Pérdida brusca de sustentación durante descenso vertical. Expected Behavior: Recuperación posible si existe altitud suficiente y velocidad de avance. Identified Deviation: Descenso vertical superior a 800 ft/min provoca vortex ring state. Historical Alignment: Coincide con SR-2024-009. Technical Hypothesis: Condición de anillo de vórtice simulada por YASim. Confidence Level: 0.92"
+    },
+    {
+      "id": "TC-006",
+      "category": "problem_analysis",
+      "table": "kb",
+      "input": "La Cessna entra en barrena cuando intento practicar maniobras de pérdida y no sé cómo recuperarla.",
+      "expected_output": "Reported Behavior: Entrada en barrena durante maniobras de pérdida. Expected Behavior: Recuperación mediante procedimiento estándar de pérdida. Identified Deviation: Uso simultáneo de alerón y timón induce barrena. Historical Alignment: Coincide con SR-2024-015. Technical Hypothesis: Comportamiento aerodinámico realista modelado en JSBSim. Confidence Level: 0.93"
+    },
+    {
+      "id": "TC-007",
+      "category": "documentation_query",
+      "table": "docs",
+      "input": "¿Cómo se configura la variable FG_ROOT en Windows?",
+      "expected_output": "Functional Explanation: FG_ROOT define la ubicación de los datos del simulador. Configuration / Limits: Puede configurarse mediante variables de entorno, fgfsrc o fgrun. Relevant Documentation References: Manual de FlightGear, sección FG_ROOT. Confidence Level: 0.95"
+    },
+    {
+      "id": "TC-008",
+      "category": "documentation_query",
+      "table": "docs",
+      "input": "¿Qué modelos de dinámica de vuelo soporta FlightGear?",
+      "expected_output": "Functional Explanation: FlightGear soporta JSBSim y YASim como principales modelos de dinámica de vuelo. Configuration / Limits: La selección depende de la configuración de cada aeronave. Relevant Documentation References: Manual de FlightGear, capítulo de modelos de dinámica de vuelo. Confidence Level: 0.9"
+    },
+    {
+      "id": "TC-009",
+      "category": "documentation_query",
+      "table": "docs",
+      "input": "¿Cuál es el precio de la licencia de FlightGear?",
+      "expected_output": "La documentación disponible no contiene información sobre precios o licencias comerciales. No se han encontrado referencias relevantes. Confidence Level: 0.1"
+    }
+  ]
+}
