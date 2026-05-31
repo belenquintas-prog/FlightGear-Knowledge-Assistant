@@ -108,7 +108,7 @@ Los resultados muestran una elevada fidelidad al contexto recuperado y una buena
 ## Estructura del repositorio
 
 ```text
-ISSFinder-TFM/
+FlightGear-Knowledge-Assistant/
 │
 ├── README.md
 │
