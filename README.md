@@ -8,6 +8,12 @@ FlightGear-Knowledge-Assistant es un asistente basado en Inteligencia Artificial
 
 La solución combina una arquitectura multiagente, técnicas de Retrieval Augmented Generation (RAG) y búsqueda semántica para facilitar el acceso a documentación técnica e incidencias históricas.
 
+## Demo
+
+Aplicación desplegada:
+
+https://iaproject-pi.vercel.app?_vercel_share=G3wzYxFTqXq1SWvS04LK16FwrgzMDRcA
+
 ## Problema abordado
 
 Los equipos de soporte técnico gestionan información distribuida entre múltiples fuentes:
