@@ -27,11 +27,6 @@ Esta fragmentación dificulta la reutilización del conocimiento acumulado y aum
 
 FlightGear-Knowledge-Assistant busca centralizar dicho conocimiento y proporcionar respuestas contextualizadas basadas en información verificable.
 
-## Arquitectura
-
-![Arquitectura](docs/images/architecture.png)
-
-La solución está implementada mediante una arquitectura multiagente orquestada con n8n.
 
 ### Flujo de procesamiento
 
@@ -42,6 +37,8 @@ La solución está implementada mediante una arquitectura multiagente orquestada
 5. Recuperación de información mediante RAG.
 6. Generación de respuesta final.
 7. Registro de trazas mediante Langfuse.
+
+![Arquitectura](./FlightGear%20Knowledge%20Assistant/docs/images/architecture.png)
 
 ## Funcionalidades principales
 
