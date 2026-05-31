@@ -119,10 +119,17 @@ FlightGear-Knowledge-Assistant/
 │   ├── memoria.pdf
 │   ├── deepeval-results.html
 │   └── images/
+│       ├── architecture.png
+│       ├── workflow.png
+│       ├── app-ui.png
+│       └── langfuse.png
 │
 ├── evaluation/
+│   ├── eval.py
+│   └── test_cases.json
 │
 └── workflows/
+    └── n8n_workflow.json
 ```
 
 ## Líneas de evolución
