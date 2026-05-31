@@ -1,0 +1,1422 @@
+{
+  "name": "Proyecto Final",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{$node[\"Webhook\"].json.body}}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are a strategy adaptation agent for a technical knowledge management system.\n\nThe query type is: historical_data_search.\n\nYour task is to:\n\nExtract the main technical component mentioned in the query.\n\nExtract the main symptom or issue.\n\nIdentify any operational context (e.g., flight phase, configuration, condition).\n\nDetermine which structured knowledge sources must be searched.\n\nFor historical_lookup queries:\n\nFocus only on past incidents and resolutions.\n\nDo NOT request documentation search.\n\nDo NOT require deep technical comparison.\n\nOnly structured historical sources should be activated.\n\nReturn ONLY a valid JSON object, no explanations."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -16,
+        -528
+      ],
+      "id": "5c197a66-1f5e-4422-95e1-fec6602f64e9",
+      "name": "Historical Data Search Strategy",
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{$node[\"Webhook\"].json.body}}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are a strategy adaptation agent for a technical diagnostic system.\n\nThe query type is: problem_analysis.\n\nYour task is to:\n\nExtract the affected technical component.\n\nIdentify the reported behavior.\n\nIdentify the expected behavior if implicitly referenced.\n\nDetect operational conditions (flight phase, configuration, environment).\n\nDetermine the type of deviation (e.g., performance degradation, configuration mismatch, regression, unexpected output).\n\nDefine which knowledge sources must be consulted.\n\nDetermine whether comparison between expected and reported behavior is required.\n\nFor problem_analysis queries:\n\nActivate both structured historical data and technical documentation.\n\nEnable script retrieval if configuration or version changes may be relevant.\n\nRequire deep analysis.\n\nReturn ONLY a valid JSON object, no explanations."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -16,
+        -128
+      ],
+      "id": "38d1f7a6-66e4-42ef-871f-8a6d5d2149cf",
+      "name": "Problem Analysis Strategy",
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{$node[\"Webhook\"].json.body}}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are a strategy adaptation agent for a technical documentation system.\n\nThe documentation belongs to FlightGear software, which is a flight simulation software.\n\nThe query type is: documentation_query.\n\nYour task is to:\n\nIdentify the main technical component.\n\nIdentify the functional topic requested.\n\nDetermine whether the question refers to configuration, expected behavior, or limits.\n\nActivate only documentation retrieval.\n\nFor documentation_query:\n\nDo NOT activate historical sources.\n\nDo NOT activate bug or script retrieval.\n\nFocus strictly on official documentation.\n\nMedium analysis depth is sufficient.\n\nReturn ONLY a valid JSON object"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -16,
+        256
+      ],
+      "id": "757514f3-e905-414b-91df-6f40e49aa849",
+      "name": "Documentation Query Strategy",
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b43ae5bf-2566-402a-ad09-ca9a6a30369c",
+              "name": "output",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            },
+            {
+              "id": "478da0b4-5de3-4296-9ea7-f54849d7f135",
+              "name": "prompt",
+              "value": "={{ $json.prompt }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        672,
+        -128
+      ],
+      "id": "5039f86f-37c3-444d-8ee3-c8de1c187c6c",
+      "name": "Set Prompt & Output"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1280,
+        672
+      ],
+      "id": "faa3169e-01a2-450f-8f5f-50959fd6fa30",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "4Eqp9wMGzwYtYG4X",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "options": {
+          "queryName": "match_documents"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        1904,
+        256
+      ],
+      "id": "e3f7b3aa-c2cb-4210-95d7-5169dc4f6d38",
+      "name": "Supabase Vector Store1",
+      "credentials": {
+        "supabaseApi": {
+          "id": "f8dk0I0AzKfiJQ9R",
+          "name": "Supabase account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "1MoTGqiSOdQkRJ8apafpb288bhpuSztD_",
+          "mode": "list",
+          "cachedResultName": "getstart-es.pdf",
+          "cachedResultUrl": "https://drive.google.com/file/d/1MoTGqiSOdQkRJ8apafpb288bhpuSztD_/view?usp=drivesdk"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1760,
+        256
+      ],
+      "id": "7887f0cf-463f-49ee-8644-c1ef6714a50d",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "GhvDdfxsW5Dn77La",
+          "name": "Google Drive account 7"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        1568,
+        256
+      ],
+      "id": "1c3692d3-0451-444a-8123-83e4b9baa96a",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "dataType": "binary",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        2048,
+        464
+      ],
+      "id": "5a9b6cc8-4291-4955-b7ec-6f74030ca750",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.query_category }}",
+                    "rightValue": "historical_data search",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "2096624a-fcea-41bb-a173-a1c9456d9779"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Historical Data Search Strategy"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "cc658776-8d95-47b7-a86d-3318c2538700",
+                    "leftValue": "={{ $json.query_category }}",
+                    "rightValue": "problem_analysis",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Problem Analysis Strategy"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "4a769853-7c66-40c2-a25a-3ee16c80c7cb",
+                    "leftValue": "={{ $json.query_category }}",
+                    "rightValue": "documentation_query",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Documentation Query Analysis "
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        -368,
+        -144
+      ],
+      "id": "60e04354-99c8-4430-96c8-49afda2c3579",
+      "name": "Switch",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "knowledge-query",
+        "authentication": "basicAuth",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -1296,
+        -112
+      ],
+      "id": "b63f1b61-bc1f-4791-8297-e2fa3c9e55a5",
+      "name": "Webhook",
+      "webhookId": "e6b7e90a-5ef2-4579-995c-81f8f55d6a37",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "60pKM1W4X26K1l1y",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -48,
+        -336
+      ],
+      "id": "2868ff08-6cea-4b87-a12c-75db10dedb65",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "4Eqp9wMGzwYtYG4X",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\"entities\": {\n\"component\": \"string or null\",\n\"symptom\": \"string or null\",\n\"operational_context\": \"string or null\"\n},\n\"allowed_tools\": {\n  \"search_knowledge_base\": true\n},\n\"analysis_depth\": \"low\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        176,
+        -336
+      ],
+      "id": "f58ad9e5-ad0e-4af4-a0cc-38dc1ada67c0",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "gpt-4o"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -48,
+        64
+      ],
+      "id": "335ade99-1e54-499b-8ea0-41c3af674d74",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "4Eqp9wMGzwYtYG4X",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\"entities\": {\n\"component\": \"string or null\",\n\"reported_behavior\": \"string or null\",\n\"expected_behavior\": \"string or null\",\n\"operational_context\": \"string or null\",\n\"deviation_type\": \"performance | regression | configuration | unknown\"\n},\n\"allowed_tools\": {\n  \"search_documentation\": true,\n  \"search_knowledge_base\": true\n},\n\"analysis_depth\": \"high\",\n\"comparison_required\": true\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        144,
+        64
+      ],
+      "id": "106cfa3b-d70d-4e82-a1f5-55762835f7fc",
+      "name": "Structured Output Parser1"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\"entities\": {\n\"component\": \"string or null\",\n\"topic\": \"string or null\",\n\"information_type\": \"expected_behavior | configuration | limits | general_description\"\n},\n\"allowed_tools\": {\n  \"search_documentation\": true,\n  \"search_knowledge_base\": false\n},\n\"analysis_depth\": \"medium\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        160,
+        480
+      ],
+      "id": "0c0e6625-aa8a-4501-a2b9-7f66df9551fd",
+      "name": "Structured Output Parser2"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -80,
+        480
+      ],
+      "id": "5a867043-05e4-4224-99d5-4ebb683598a0",
+      "name": "OpenAI Chat Model2",
+      "credentials": {
+        "openAiApi": {
+          "id": "4Eqp9wMGzwYtYG4X",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b43ae5bf-2566-402a-ad09-ca9a6a30369c",
+              "name": "output",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            },
+            {
+              "id": "15d65608-d1c3-4430-91da-232f04816c55",
+              "name": "prompt",
+              "value": "You are a technical support knowledge assistant.\nThe user is asking about historical precedents.\nUse only the retrieved historical records provided by the system.\nYour task is to:\nIdentify whether similar cases exist.\nSummarize recurring patterns.\nDescribe how those cases were resolved.\nHighlight relevant similarities and differences with the current query.\nAvoid speculation beyond the retrieved data.\nDo NOT perform deep diagnostic reasoning.\nDo NOT use documentation unless explicitly provided.\nDo NOT invent missing details.\nStructure your response as:\nHistorical Summary\nRecurring Patterns\nTypical Resolutions\nRelevance to Current Case\nConfidence Level (0–1)\n\nBe concise and factual.\n\nYou will receive a structured strategy object with the following fields:\nquery: The original user question.\nentities: Extracted technical elements to guide retrieval.\nallowed_tools: Specifies which tools you are permitted to use.\nanalysis_depth: Indicates required reasoning depth (low, medium, high).\ncomparison_required: Indicates whether expected vs reported behavior comparison is required.\n\nYou must use this strategy object as binding constraints.\nRules:\nThe strategy defines what sources you may consult.\nThe strategy defines the required reasoning depth.\nThe strategy must override any implicit assumptions.\nIf a tool is not allowed, you must not call it.\nIf analysis_depth is low, avoid deep diagnosis.\nIf analysis_depth is high, perform structured technical reasoning.\nThe strategy is authoritative and must not be ignored.\n\nYou have access to the following tools:\nmatch_knowlege_base\n\nYou may only use tools allowed by the strategy constraints.\nIf a tool is marked as not allowed, you must not call it.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        304,
+        -528
+      ],
+      "id": "95ffec2c-a8e5-4c0b-a28d-da9ae1ef18fa",
+      "name": "Set Prompt & Output1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b43ae5bf-2566-402a-ad09-ca9a6a30369c",
+              "name": "output",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            },
+            {
+              "id": "d07224a8-c26b-4d81-be59-0243de744d0f",
+              "name": "prompt",
+              "value": "You are a technical diagnostic reasoning assistant operating in a high-reliability environment.\nThe query requires deep problem analysis.\nUse only the retrieved data provided.\nYour task is to:\nClearly restate the reported behavior.\nIdentify the expected behavior from documentation (if available).\nCompare reported vs expected behavior.\nIdentify the type of deviation.\nEvaluate whether historical cases align with this deviation.\nFormulate a technically plausible hypothesis.\nExplicitly state uncertainties and missing evidence.\nDo NOT invent data.\nDo NOT speculate beyond retrieved evidence.\nIf documentation or historical alignment is weak, clearly say so.\nStructure your response as:\nReported Behavior\nExpected Behavior\nIdentified Deviation\nHistorical Alignment\nTechnical Hypothesis\nUncertainties\nConfidence Level (0–1)\n\nBe analytical, structured, and precise.\n\nYou will receive a structured strategy object with the following fields:\nquery: The original user question.\nentities: Extracted technical elements to guide retrieval.\nallowed_tools: Specifies which tools you are permitted to use.\nanalysis_depth: Indicates required reasoning depth (low, medium, high).\ncomparison_required: Indicates whether expected vs reported behavior comparison is required.\n\nYou must use this strategy object as binding constraints.\nRules:\nThe strategy defines what sources you may consult.\nThe strategy defines the required reasoning depth.\nThe strategy must override any implicit assumptions.\nIf a tool is not allowed, you must not call it.\nIf analysis_depth is low, avoid deep diagnosis.\nIf analysis_depth is high, perform structured technical reasoning.\nThe strategy is authoritative and must not be ignored.\n\nYou have access to the following tools:\nsearch_user_manual\nsearch_historical\n\nYou may only use tools allowed by the strategy constraints.\nIf a tool is marked as not allowed, you must not call it.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        304,
+        -128
+      ],
+      "id": "ddb1e12e-22ef-4c66-b9ea-e06f09b9c026",
+      "name": "Set Prompt & Output2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b43ae5bf-2566-402a-ad09-ca9a6a30369c",
+              "name": "output",
+              "value": "={{ $json.output }}",
+              "type": "object"
+            },
+            {
+              "id": "1f16c689-7337-4360-97ab-afb8f83541a4",
+              "name": "prompt",
+              "value": "You are a technical documentation assistant.  \nAnswer strictly based on the retrieved documentation.  \nYour task is to:  Provide a clear explanation of the requested functionality.  \nReference relevant sections when applicable.  \nClarify configuration rules, expected behavior, or limits as described.  \nAvoid historical references unless explicitly retrieved.  \nDo NOT perform diagnostic reasoning. Do NOT speculate. \nIf the documentation does not provide enough information, clearly state that.  \nStructure your response as:  \nFunctional Explanation  \nConfiguration / Limits (if applicable)  \nRelevant Documentation References  \nConfidence Level (0–1)\n  \nBe clear, structured, and technically accurate.\n\nYou will receive a structured strategy object with the following fields:\nquery: The original user question.\nentities: Extracted technical elements to guide retrieval.\nallowed_tools: Specifies which tools you are permitted to use.\nanalysis_depth: Indicates required reasoning depth (low, medium, high).\ncomparison_required: Indicates whether expected vs reported behavior comparison is required.\n\nYou must use this strategy object as binding constraints.\nRules:\nThe strategy defines what sources you may consult.\nThe strategy defines the required reasoning depth.\nThe strategy must override any implicit assumptions.\nIf a tool is not allowed, you must not call it.\nIf analysis_depth is low, avoid deep diagnosis.\nIf analysis_depth is high, perform structured technical reasoning.\nThe strategy is authoritative and must not be ignored.\n\nYou have access to the following tools:\nsearch_user_manual\n\n\nYou may only use tools allowed by the strategy constraints.\nIf a tool is marked as not allowed, you must not call it.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        304,
+        256
+      ],
+      "id": "4329dfa3-b1ae-423d-b3c2-ef9773df7ebd",
+      "name": "Set Prompt & Output3"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "gpt-4o"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        768,
+        112
+      ],
+      "id": "db2558d9-1ae8-4c09-bce1-68aa8061acea",
+      "name": "OpenAI Chat Model3",
+      "credentials": {
+        "openAiApi": {
+          "id": "4Eqp9wMGzwYtYG4X",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "search_user_manual: to search in user manual",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "Table",
+                "value": "documents"
+              }
+            ]
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        1232,
+        144
+      ],
+      "id": "9da03528-58b1-4e75-b6fd-b59c16e86573",
+      "name": "Supabase Search Documentation",
+      "credentials": {
+        "supabaseApi": {
+          "id": "f8dk0I0AzKfiJQ9R",
+          "name": "Supabase account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Query:\n{{$node[\"Webhook\"].json.body.query}}\nStrategy:\n{{ $json.output }}\n\n",
+        "options": {
+          "systemMessage": "={{ $json.prompt }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        912,
+        -128
+      ],
+      "id": "0eacb4af-3a87-4167-bacb-852b0d13bb10",
+      "name": "Answer"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "knowledge_base",
+        "returnAll": true,
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "embedding",
+              "condition": "is",
+              "keyValue": "null"
+            }
+          ]
+        }
+      },
+      "id": "cb634bd0-61cb-447f-b8ef-6d053e454e0e",
+      "name": "Read Rows",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1568,
+        912
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "AeqhrX8k9WbT0sif",
+          "name": "Supabase account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Vectorize Historical Data\n",
+        "height": 96
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2416,
+        992
+      ],
+      "typeVersion": 1,
+      "id": "ec145340-bd16-4919-82ba-294e3ad80a87",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Vectorize Documentation\n",
+        "height": 96
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2160,
+        128
+      ],
+      "typeVersion": 1,
+      "id": "575602eb-50f4-407b-bcc0-2e6207ab439e",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/embeddings",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "text-embedding-3-small"
+            },
+            {
+              "name": "input",
+              "value": "={{ $json.content }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "7b3d10c3-4b72-4d5d-8f12-3132bece9939",
+      "name": "Generate embedding",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        1792,
+        912
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "4Eqp9wMGzwYtYG4X",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nreturn items.map((item, index) => {\n  const embedding = item.json.data[0].embedding;\n  const prevItems = $('Read Rows').all();\n  const id = prevItems[index].json.id;\n\n  return {\n    json: {\n      id: id,\n      embedding: JSON.stringify(embedding)\n    }\n  };\n});"
+      },
+      "id": "d45e4c93-bfd9-445d-bede-e1bdf518dfa8",
+      "name": "Prepare vector",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2016,
+        912
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "knowledge_base",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": "={{ $json.id }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "embedding",
+              "fieldValue": "={{ $json.embedding }}"
+            }
+          ]
+        }
+      },
+      "id": "76b5694d-0530-4d41-baeb-d00a5ff6682c",
+      "name": "Save embedding in Supabase",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        2224,
+        912
+      ],
+      "credentials": {
+        "supabaseApi": {
+          "id": "AeqhrX8k9WbT0sif",
+          "name": "Supabase account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2032,
+        -128
+      ],
+      "id": "b676f327-b20d-4933-aeea-8312949a4020",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "search_knowledge_base: to search in knowledge_base",
+        "tableName": {
+          "__rl": true,
+          "value": "knowledge_base",
+          "mode": "list",
+          "cachedResultName": "knowledge_base"
+        },
+        "topK": 15,
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "Table",
+                "value": "Knowledge_base"
+              }
+            ]
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        944,
+        144
+      ],
+      "id": "b8b29a8e-819c-4265-9bbd-e35ea1ec7865",
+      "name": "Supabase Search Knowledge Base",
+      "credentials": {
+        "supabaseApi": {
+          "id": "AeqhrX8k9WbT0sif",
+          "name": "Supabase account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.body.query }}",
+        "guardrails": {
+          "jailbreak": {
+            "value": {
+              "threshold": 0.7
+            }
+          },
+          "nsfw": {
+            "value": {
+              "threshold": 0.9,
+              "customizePrompt": true
+            }
+          },
+          "pii": {
+            "value": {
+              "type": "all"
+            }
+          },
+          "topicalAlignment": {
+            "value": {
+              "threshold": 0.7,
+              "prompt": "You are a content analysis system that determines if text stays on topic.\n\nBUSINESS SCOPE: Technical support and maintenance operations for FlightGear software, including incident resolution, historical service requests (SRs), software bugs, corrective scripts, system configuration, expected system behavior, troubleshooting, diagnostics, and technical documentation related to flight simulation software.\n\nDetermine if the text stays within the defined business scope. Flag any content\nthat strays from the allowed topics."
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.guardrails",
+      "typeVersion": 2,
+      "position": [
+        -1088,
+        -112
+      ],
+      "id": "cb9f4790-f8e8-4879-ba38-d3649095733a",
+      "name": "Guardrails"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-nano",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-nano"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -1088,
+        96
+      ],
+      "id": "5b5e58ce-4e8a-4ff5-a708-a24b4293de89",
+      "name": "OpenAI Chat Model4",
+      "credentials": {
+        "openAiApi": {
+          "id": "4Eqp9wMGzwYtYG4X",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {\"output\": $json.output} }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -416,
+        208
+      ],
+      "id": "40c7ffa6-daf3-41fb-bfb0-7dc4838634f9",
+      "name": "Respond to Webhook1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b43ae5bf-2566-402a-ad09-ca9a6a30369c",
+              "name": "output",
+              "value": "=Your request could not be processed because it does not comply with the system usage and safety policies.\n\nPlease submit a query related to technical support, troubleshooting, historical incidents, or documentation within the supported domain avoiding any personally identifiable information data",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -608,
+        208
+      ],
+      "id": "f7f811a7-9a16-4a91-a8d5-a81cc0d1f036",
+      "name": "Fail Output"
+    },
+    {
+      "parameters": {
+        "jsCode": "const tokens = $('Answer').item.json.usage;\n\nreturn [{\n  json: {\n    batch: [\n      {\n        id: \"trace-\" + Date.now(),\n        timestamp: new Date().toISOString(),\n        type: \"trace-create\",\n        body: {\n          id: \"trace-\" + Date.now(),\n          name: \"flightgear-query\",\n          userId: \"demo-user\",\n          sessionId: \"flightgear-session\",\n          input: $('Webhook').item.json.body.query,\n          output: $('Answer').item.json.output,\n          metadata: {\n            query_category: $('Webhook').item.json.body.query_category,\n            tokens: tokens\n          }\n        }\n      }\n    ]\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1264,
+        -128
+      ],
+      "id": "6c2b7f31-c366-467b-b06b-1c4f7f841787",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://cloud.langfuse.com/api/public/ingestion",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "langfuseApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "batch",
+              "value": "={{ $json.batch }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1504,
+        -128
+      ],
+      "id": "be9e7514-5355-4610-aa8f-cba6234b059a",
+      "name": "HTTP Request",
+      "credentials": {
+        "langfuseApi": {
+          "id": "5iAfh7rfKNWb0KIH",
+          "name": "Langfuse account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bd7f244b-b06f-4d1b-9f82-b05df5763568",
+              "name": "output",
+              "value": "={{ $('Answer').item.json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1760,
+        -128
+      ],
+      "id": "35bfbb9b-36f1-469a-b131-345789bdfca4",
+      "name": "Set Output"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7a14753d-8d42-47d9-aca4-a068da2bcf78",
+              "name": "query",
+              "value": "={{$node[\"Webhook\"].json.body.query}}",
+              "type": "string"
+            },
+            {
+              "id": "57130670-ec1d-4bef-9e97-56da5c0499b8",
+              "name": "query_category",
+              "value": "={{$node[\"Webhook\"].json.body.query_category}}",
+              "type": "string"
+            },
+            {
+              "id": "a31cc4a0-a33f-4e9b-b86a-71196f3bf668",
+              "name": "start_time ",
+              "value": "={{ $now.toMillis() }}",
+              "type": "number"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "include": "selected",
+        "includeFields": "start_time",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -656,
+        -128
+      ],
+      "id": "e430e1db-0739-4aed-a074-fc7016d372a7",
+      "name": "ProcessData"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Historical Data Search Strategy": {
+      "main": [
+        [
+          {
+            "node": "Set Prompt & Output1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Problem Analysis Strategy": {
+      "main": [
+        [
+          {
+            "node": "Set Prompt & Output2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Documentation Query Strategy": {
+      "main": [
+        [
+          {
+            "node": "Set Prompt & Output3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Prompt & Output": {
+      "main": [
+        [
+          {
+            "node": "Answer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store1",
+            "type": "ai_embedding",
+            "index": 0
+          },
+          {
+            "node": "Supabase Search Documentation",
+            "type": "ai_embedding",
+            "index": 0
+          },
+          {
+            "node": "Supabase Search Knowledge Base",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Vector Store1": {
+      "main": [
+        []
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Supabase Vector Store1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Supabase Vector Store1",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Historical Data Search Strategy",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Problem Analysis Strategy",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Documentation Query Strategy",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [],
+        []
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Guardrails",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Historical Data Search Strategy",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Historical Data Search Strategy",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Problem Analysis Strategy",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Problem Analysis Strategy",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser2": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Documentation Query Strategy",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Documentation Query Strategy",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Prompt & Output1": {
+      "main": [
+        [
+          {
+            "node": "Set Prompt & Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Prompt & Output2": {
+      "main": [
+        [
+          {
+            "node": "Set Prompt & Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Prompt & Output3": {
+      "main": [
+        [
+          {
+            "node": "Set Prompt & Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Answer",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Search Documentation": {
+      "ai_tool": [
+        [
+          {
+            "node": "Answer",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Answer": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Rows": {
+      "main": [
+        [
+          {
+            "node": "Generate embedding",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate embedding": {
+      "main": [
+        [
+          {
+            "node": "Prepare vector",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare vector": {
+      "main": [
+        [
+          {
+            "node": "Save embedding in Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Search Knowledge Base": {
+      "ai_tool": [
+        [
+          {
+            "node": "Answer",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardrails": {
+      "main": [
+        [
+          {
+            "node": "ProcessData",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Fail Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model4": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Guardrails",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fail Output": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook": {
+      "main": [
+        []
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Set Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Output": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ProcessData": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "b1cff5c1-b7c4-4473-9731-e9e24defc0f0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d952c86efb233c99ef884bd2e5545be1d0459d156fa460651d1ec2f20bfe6f45"
+  },
+  "id": "WNzeTeKFQXNNcSWw",
+  "tags": []
+}

@@ -1,0 +1,983 @@
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+<meta charset="UTF-8">
+<title>FlightGear RAG Evaluation</title>
+
+<style>
+
+body {
+    font-family: Arial, sans-serif;
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+    background: #f5f7fa;
+}
+
+h1 {
+    color: #1a1a2e;
+}
+
+.case {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.metric {
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 6px;
+    background: #fafafa;
+}
+
+.pass {
+    color: green;
+    font-weight: bold;
+}
+
+.fail {
+    color: red;
+    font-weight: bold;
+}
+
+.score {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.reason {
+    color: #555;
+    margin-top: 5px;
+}
+
+.summary {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 12px;
+}
+
+th {
+    background: #1a1a2e;
+    color: white;
+}
+
+pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    background: #f4f4f4;
+    padding: 12px;
+    border-radius: 6px;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>FlightGear Knowledge Assistant — Evaluación RAG</h1>
+<p><strong>Fecha:</strong> 2026-05-26 19:15</p>
+
+<div class="summary">
+
+<h2>Resumen de métricas</h2>
+
+<table>
+
+<tr>
+<th>Métrica</th>
+<th>Score medio</th>
+<th>Pass rate</th>
+</tr>
+
+    <tr>
+        <td>Faithfulness</td>
+        <td>0.95</td>
+        <td>100.0%</td>
+    </tr>
+    
+    <tr>
+        <td>Answer Relevancy</td>
+        <td>0.88</td>
+        <td>88.9%</td>
+    </tr>
+    
+    <tr>
+        <td>Contextual Precision</td>
+        <td>0.45</td>
+        <td>22.2%</td>
+    </tr>
+    
+    <tr>
+        <td>Contextual Recall</td>
+        <td>0.81</td>
+        <td>88.9%</td>
+    </tr>
+    
+</table>
+</div>
+
+    <div class="case">
+
+        <h2>
+            <span class="fail">
+                [FAIL]
+            </span>
+            Caso 1
+        </h2>
+
+        <p><strong>Input:</strong></p>
+
+        <pre>¿Cuál es el precio de la licencia de FlightGear?</pre>
+
+        <p><strong>Actual Output:</strong></p>
+
+        <pre>Functional Explanation:
+FlightGear is distributed under the GNU General Public License (GPL), which means it is free software. The license allows anyone to copy, distribute, modify, and sell the software. However, when distributing the software, the original source code must be included, and the GPL license terms must be maintained. Essentially, you can do anything with the software except make it proprietary (non-free). Therefore, there is no fixed price to purchase a license for FlightGear as it is freely available under the GPL.
+
+Configuration / Limits:
+- You can freely copy and distribute FlightGear.
+- You can modify and sell FlightGear but must include the source code and keep the GPL license.
+- The full text of the GPL license is included with the source code and available online at https://www.gnu.org/copyleft/gpl.html.
+
+Relevant Documentation References:
+- Section on FlightGear licensing explaining the GPL license terms and freedoms.
+- Mention of the GPL license text included in the source code.
+- Link to the official GPL license text.
+
+Confidence Level: 1</pre>
+
+        <p><strong>Expected Output:</strong></p>
+
+        <pre>Functional Explanation: La documentación recuperada no contiene información sobre precios o licencias comerciales de FlightGear.
+Configuration / Limits: No aplica.
+Relevant Documentation References: No se han encontrado referencias relevantes en la documentación disponible.
+Confidence Level: 0.1</pre>
+
+        <h3>Métricas</h3>
+    
+        <div class="metric">
+
+            <div class="score pass">
+                Faithfulness: 0.82
+            </div>
+
+            <div class="reason">
+                The score is 0.82 because the actual output incorrectly states that the GPL license prohibits selling the software, while the retrieval context indicates that it allows for copying, modifying, and distributing, which can include selling under certain conditions.
+            </div>
+
+        </div>
+        
+        <div class="metric">
+
+            <div class="score fail">
+                Answer Relevancy: 0.25
+            </div>
+
+            <div class="reason">
+                The score is 0.25 because the response primarily discusses the GPL license and its terms, which are irrelevant to the specific question about the price of the FlightGear license. While the information provided is informative, it fails to address the core inquiry, resulting in a low relevancy score.
+            </div>
+
+        </div>
+        
+        <div class="metric">
+
+            <div class="score fail">
+                Contextual Precision: 0.00
+            </div>
+
+            <div class="reason">
+                The score is 0.00 because all nodes in the retrieval contexts are irrelevant to the input question about the price of the FlightGear license. For instance, the first node discusses the GPL license and the freedom to modify and distribute FlightGear, but does not mention any pricing information. Similarly, the second node talks about costs associated with other flight simulators without providing specific information about FlightGear's price. This pattern continues across all nodes, which focus on various aspects of FlightGear without addressing pricing, leading to a complete lack of relevant information.
+            </div>
+
+        </div>
+        
+        <div class="metric">
+
+            <div class="score fail">
+                Contextual Recall: 0.50
+            </div>
+
+            <div class="reason">
+                The score is 0.50 because while the mention of the absence of pricing or licensing information in sentence 1 connects to node 1 regarding FlightGear's free and open-source nature, the lack of relevant documentation in sentence 3 does not correlate with any specific node, leading to uncertainty in the overall context.
+            </div>
+
+        </div>
+        </div>
+    <div class="case">
+
+        <h2>
+            <span class="fail">
+                [FAIL]
+            </span>
+            Caso 2
+        </h2>
+
+        <p><strong>Input:</strong></p>
+
+        <pre>¿Qué incidencias hay relacionadas con el joystick en Linux?</pre>
+
+        <p><strong>Actual Output:</strong></p>
+
+        <pre>Historical Summary:
+There is a specific recorded incident related to joysticks on Linux (SR-2024-005). The issue involved FlightGear running on Ubuntu Linux 24.04 where the joystick was detected in the system device files (/dev/input) but was not recognized or responsive within FlightGear. The root cause was a change in Ubuntu's input device permissions where the user was not part of the 'input' group, preventing FlightGear from accessing the joystick device at runtime.
+
+Recurring Patterns:
+- Joystick related incidents on Linux commonly arise due to permission/access rights to device files.
+- The device is typically recognized by the system but is inaccessible to the flight simulator or application.
+- Similar input device issues often involve manual configuration or group membership adjustment.
+
+Typical Resolutions:
+- Add the user to the 'input' group to grant joystick access: sudo usermod -aG input $USER.
+- User must log out and back in to apply changes.
+- Verify device presence with commands like ls -la /dev/input/js0.
+- Alternatively, map joystick axes/buttons manually via XML configuration files in the user's home directory (~/.fgfs/).
+
+Relevance to Current Case:
+The current query on joystick incidents in Linux directly matches the historical case SR-2024-005. The nature of the issue and mitigation steps are closely aligned, focusing on permission and group membership adjustments to resolve joystick recognition and responsiveness problems.
+
+Confidence Level: 1</pre>
+
+        <p><strong>Expected Output:</strong></p>
+
+        <pre>Historical Summary: SR-2024-005 documenta joystick no reconocido en Ubuntu 24.04 por cambio de permisos del grupo input.
+Recurring Patterns: Usuario sin permisos del grupo input en versiones recientes de Ubuntu.
+Typical Resolutions: sudo usermod -aG input $USER, cerrar sesión y reiniciar. Verificar con ls -la /dev/input/js0.
+Relevance to Current Case: Alta para Ubuntu 24.04 y distribuciones recientes.
+Confidence Level: 0.95</pre>
+
+        <h3>Métricas</h3>
+    
+        <div class="metric">
+
+            <div class="score pass">
+                Faithfulness: 1.00
+            </div>
+
+            <div class="reason">
+                The score is 1.00 because there are no contradictions present, indicating that the actual output aligns perfectly with the retrieval context.
+            </div>
+
+        </div>
+        
+        <div class="metric">
+
+            <div class="score pass">
+                Answer Relevancy: 1.00
+            </div>
+
+            <div class="reason">
+                The score is 1.00 because the response directly addresses the question about joystick issues in Linux without any irrelevant statements.
+            </div>
+
+        </div>
+        
+        <div class="metric">
+
+            <div class="score fail">
+                Contextual Precision: 0.08
+            </div>
+
+            <div class="reason">
+                The score is 0.08 because the relevant node, which is the 13th node, is significantly outnumbered by irrelevant nodes that dominate the rankings. The first 12 nodes all discuss unrelated issues, such as problems with aircraft and flight systems, which do not pertain to the joystick in Linux. This lack of relevant content in the higher ranks contributes to the low score.
+            </div>
+
+        </div>
+        
+        <div class="metric">
+
+            <div class="score pass">
+                Contextual Recall: 0.80
+            </div>
+
+            <div class="reason">
+                The score is 0.80 because most sentences in the expected output are well-supported by node(s) in retrieval context, particularly the references to joystick recognition issues and user permissions in Ubuntu 24.04, which align closely with the 5th node. However, the mention of 'Confidence Level: 0.95' does not connect to any node, slightly lowering the overall score.
+            </div>
+
+        </div>
+        </div>
+    <div class="case">
+
+        <h2>
+            <span class="fail">
+                [FAIL]
+            </span>
+            Caso 3
+        </h2>
+
+        <p><strong>Input:</strong></p>
+
+        <pre>¿Hay registros de problemas de rendimiento gráfico en Windows?</pre>
+
+        <p><strong>Actual Output:</strong></p>
+
+        <pre>Historical Summary:
+There is a recorded historical incident (SR-2024-001) regarding graphic performance issues on Windows platforms. The problem described involves extremely low frame rates (<1 FPS) making it impossible to use FlightGear effectively on Windows 11. This was traced to the Windows graphics subsystem's interaction with Intel UHD integrated graphics, where lacking certified OpenGL drivers caused the simulator to fall back on software rendering. 
+
+Recurring Patterns:
+The recurring pattern in such issues involves hardware lacking proper or certified graphics driver support for OpenGL, leading to performance degradation by software rendering. This is particularly frequent on integrated graphic chipsets like Intel UHD with Windows 11. The problem typically manifests as very low frame rates and high latency rendering.
+
+Typical Resolutions:
+The resolutions usually involve updating or installing the latest OpenGL drivers from the hardware manufacturer. If hardware is insufficient to provide required support, the advised solution is upgrading to a dedicated graphics card compatible with OpenGL (e.g., NVIDIA GeForce or AMD Radeon). Temporary measures include lowering rendering settings such as screen resolution, disabling advanced graphical features (e.g., 3D clouds), and adjusting fog settings to improve frame rates.
+
+Relevance to Current Case:
+The historical data directly relates to Windows graphic performance problems, especially with integrated Intel UHD graphics on Windows 11 that FlightGear encountered. This case serves as a model precedent for diagnosing and resolving poor graphic performance by addressing driver support and hardware limitations.
+
+Confidence Level: 1</pre>
+
+        <p><strong>Expected Output:</strong></p>
+
+        <pre>Historical Summary: SR-2024-001 documenta rendimiento inferior a 1 FPS en Windows 11 con tarjeta Intel UHD integrada por falta de soporte OpenGL certificado.
+Recurring Patterns: Hardware integrado sin soporte OpenGL por hardware fuerza renderizado por software.
+Typical Resolutions: Instalar drivers OpenGL del fabricante. Reducir resolución y desactivar nubes 3D con --disable-clouds3d y --fog-fastest.
+Relevance to Current Case: Alta para sistemas Windows con GPU integrada.
+Confidence Level: 0.95</pre>
+
+        <h3>Métricas</h3>
+    
+        <div class="metric">
+
+            <div class="score pass">
+                Faithfulness: 1.00
+            </div>
+
+            <div class="reason">
+                The score is 1.00 because there are no contradictions present, indicating that the actual output aligns perfectly with the retrieval context.
+            </div>
+
+        </div>
+        
+        <div class="metric">
+
+            <div class="score pass">
+                Answer Relevancy: 1.00
+            </div>
+
+            <div class="reason">
+                The score is 1.00 because the response directly addresses the question about performance issues in Windows without any irrelevant statements.
+            </div>
+
+        </div>
+        
+        <div class="metric">
+
+            <div class="score fail">
+                Contextual Precision: 0.58
+            </div>
+
+            <div class="reason">
+                The score is 0.58 because while there are relevant nodes that provide direct answers to the question about graphic performance issues in Windows, such as the first node which discusses low FPS and integrated graphics, there are also several irrelevant nodes ranked higher. For instance, the second node discusses an unrelated issue with an aircraft, which detracts from the overall relevance of the results. This mix of relevant and irrelevant nodes affects the score, as the presence of multiple irrelevant nodes, like the third and fourth nodes that focus on unrelated aircraft problems, lowers the contextual precision.
+            </div>
+
+        </div>
+        
+        <div class="metric">
+
+            <div class="score pass">
+                Contextual Recall: 1.00
+            </div>
+
+            <div class="reason">
+                The score is 1.00 because every sentence in the expected output directly corresponds to the information provided in node 1 of the retrieval context, demonstrating a perfect alignment with no contradictions.
+            </div>
+
+        </div>
+        </div>
+    <div class="case">
+
+        <h2>
+            <span class="fail">
+                [FAIL]
+            </span>
+            Caso 4
+        </h2>
+
+        <p><strong>Input:</strong></p>
+
+        <pre>¿Qué problemas conocidos hay con el ILS en FlightGear?</pre>
+
+        <p><strong>Actual Output:</strong></p>
+
+        <pre>Historical Summary:
+There is a known issue (SR-2024-006, BUG-045) with the ILS system in FlightGear affecting the correct capture of the localizer during approach to runway 25R at Livermore (KLVK). The CDI needle does not center despite the aircraft being on the correct radial. The cause was that the NAV1 frequency was not correctly tuned to the ILS frequency (109.75 MHz) and the ILS receiver only activates when the autopilot navigation mode is LOC/GS. If the autopilot is in NAV mode instead of APR, the CDI shows VOR deviation instead of localizer deviation. Additionally, the receiver must be within less than 18 NM from the runway threshold to be operational.
+
+Recurring Patterns:
+- Problems with ILS operation are often related to incorrect frequency tuning or autopilot mode settings.
+- The navigation mode of the autopilot is critical in determining the correct sensor being read (LOC/GS vs NAV).
+- Receiving conditions (distance to the runway) impact the correct reception of ILS signals.
+
+Typical Resolutions:
+- Ensure NAV1 is tuned exactly to the published ILS frequency.
+- Switch autopilot mode to APR before initiating the final approach.
+- Verify that the aircraft is within operational range (<18 NM) of the runway threshold.
+- These fixes are straightforward and are marked as resolved.
+
+Relevance to Current Case:
+The historical case directly involves ILS issues reported within FlightGear, matching the user’s query about known ILS problems in FlightGear. The problem stems from user configuration errors rather than fundamental simulation bugs, and the resolutions involve proper frequency setting and autopilot mode management.
+
+Confidence Level: 1</pre>
+
+        <p><strong>Expected Output:</strong></p>
+
+        <pre>Historical Summary: SR-2024-006 documenta fallo de captura del localizador ILS en KLVK pista 25R. SR-2024-013 documenta indicación incorrecta del VOR durante tutorial IFR.
+Recurring Patterns: Confusión entre modos de navegación NAV y APR, y entre radiales FROM y TO.
+Typical Resolutions: Sintonizar NAV1 a 109.75 MHz, cambiar modo piloto automático a APR antes de aproximación final, verificar distancia inferior a 18 NM.
+Relevance to Current Case: Alta para aproximaciones ILS. Media para navegación VOR.
+Confidence Level: 0.9</pre>
+
+        <h3>Métricas</h3>
+    
+        <div class="metric">
+
+            <div class="score pass">
+                Faithfulness: 1.00
+            </div>
+
+            <div class="reason">
+                The score is 1.00 because there are no contradictions present, indicating that the actual output aligns perfectly with the retrieval context.
+            </div>
+
+        </div>
+        
+        <div class="metric">
+
+            <div class="score pass">
+                Answer Relevancy: 0.93
+            </div>
+
+            <div class="reason">
+                The score is 0.93 because while the response provided useful information, it included an irrelevant statement about fixes being straightforward and marked as resolved, which does not directly address the known problems with ILS in FlightGear.
+            </div>
+
+        </div>
+        
+        <div class="metric">
+
+            <div class="score fail">
+                Contextual Precision: 0.60
+            </div>
+
+            <div class="reason">
+                The score is 0.60 because while there are relevant nodes that address issues with the ILS in FlightGear, there are also several irrelevant nodes that rank higher than some relevant ones. For instance, the first node discusses a specific ILS issue, but the third node, which is irrelevant, ranks higher. This pattern continues with other irrelevant nodes, such as the fourth and fifth nodes, which discuss unrelated topics. The presence of these irrelevant nodes in higher ranks affects the overall contextual precision score.
+            </div>
+
+        </div>
+        
+        <div class="metric">
+
+            <div class="score pass">
+                Contextual Recall: 1.00
+            </div>
+
+            <div class="reason">
+                The score is 1.00 because all sentences in the expected output are well-supported by the corresponding nodes in the retrieval context, particularly the 6th and 13th nodes, which provide clear references to the issues and resolutions discussed.
+            </div>
+
+        </div>
+        </div>
+    <div class="case">
+
+        <h2>
+            <span class="fail">
+                [FAIL]
+            </span>
+            Caso 5
+        </h2>
+
+        <p><strong>Input:</strong></p>
+
+        <pre>El helicóptero Bo105 pierde sustentación bruscamente durante el descenso vertical y no puedo recuperarlo.</pre>
+
+        <p><strong>Actual Output:</strong></p>
+
+        <pre>Reported Behavior:
+The helicopter Bo105 experiences a sudden loss of lift during a vertical descent and the pilot cannot recover it.
+
+Expected Behavior:
+According to the documentation and aerodynamics principles for the Bo105 helicopter, the expected behavior during a vertical descent is to maintain adequate lift, ensuring controlled descent and the ability to recover from it. Specifically, the helicopter should avoid conditions like vortex ring state (anillo de vórtice) that cause a sudden loss of lift. The descent rate should be managed to avoid exceeding thresholds that lead to this aerodynamic condition. Recovery involves gaining forward airspeed by lowering the nose to exit the vortex ring state.
+
+Identified Deviation:
+This is a performance degradation type of deviation where the lift is abruptly lost under a vertical descent scenario, which deviates from the expected stable and controlled descent.
+
+Historical Alignment:
+A directly related historical knowledge base entry (SR-2024-009, BUG-073) indicates that the Bo105 helicopter in FlightGear simulation loses lift abruptly due to entering a vortex ring state during vertical descents exceeding around 800 ft/min without forward speed. The helicopter simulator correctly models this behavior as a limitation of the physics model ("by-design"), and recovery is possible only with sufficient altitude (minimum 800 ft AGL) to gain forward airspeed. At low altitudes, recovery is impossible. The mitigation suggested is to avoid vertical descent rates exceeding 500 ft/min and to maintain some forward speed to prevent the onset of vortex ring state.
+
+Technical Hypothesis:
+The sudden loss of lift during vertical descent is caused by the helicopter entering a vortex ring state (anillo de vórtice) when descending vertically too fast without forward airspeed. This phenomenon disrupts the airflow through the rotor system, drastically reducing lift and causing uncontrollable descent. The pilot's inability to recover is due to insufficient altitude or forward velocity needed to break out of this condition.
+
+Uncertainties:
+- The exact descent rate and forward speed at which the problem occurs are not provided by the user.
+- There is no direct reporting of altitude during the event, which influences recovery capability.
+- The issue is based on simulation model behavior (FlightGear) which may or may not be fully representative of real Bo105 flight dynamics.
+- There is no mention of mechanical failures or other factors that might influence lift loss, so these cannot be ruled out.
+
+Confidence Level:
+0.85 — The hypothesis aligns well with documented FlightGear simulation behavior of the Bo105 rotorcraft under vertical descent conditions causing vortex ring state and loss of lift, with known recovery constraints. However, some missing operational context (altitude, speeds) limits full confirmation.</pre>
+
+        <p><strong>Expected Output:</strong></p>
+
+        <pre>Reported Behavior: El helicóptero Bo105 pierde sustentación bruscamente durante el descenso vertical y no es posible recuperar el control.
+Expected Behavior: El modelo YASim del Bo105 simula la condición de anillo de vórtice pero permite recuperación si se dispone de altitud suficiente y se gana velocidad de avance.
+Identified Deviation: Descenso vertical superior a 800 ft/min sin velocidad de avance activa la condición de anillo de vórtice según BUG-073.
+Historical Alignment: SR-2024-009 documenta exactamente este comportamiento.
+Technical Hypothesis: La pérdida de sustentación es consecuencia directa de superar el umbral de 800 ft/min en descenso vertical puro. La recuperación es imposible por debajo de 500 ft AGL.
+Uncertainties: Sin conocer la altitud AGL en el momento del fallo no es posible determinar si la recuperación era viable.
+Confidence Level: 0.92</pre>
+
+        <h3>Métricas</h3>
+    
+        <div class="metric">
+
+            <div class="score pass">
+                Faithfulness: 0.92
+            </div>
+
+            <div class="reason">
+                The score is 0.92 because the actual output incorrectly claims that the Bo105 helicopter can maintain adequate lift during a vertical descent, which contradicts the retrieval context stating that it does not maintain lift if it enters vortex ring state.
+            </div>
+
+        </div>
+        
+        <div class="metric">
+
+            <div class="score pass">
+                Answer Relevancy: 0.94
+            </div>
+
+            <div class="reason">
+                The score is 0.94 because while the response effectively addresses the issue of lift loss in the Bo105 helicopter, it lacks mention of mechanical failures or other factors that might influence this loss, which could provide a more comprehensive understanding of the situation.
+            </div>
+
+        </div>
+        
+        <div class="metric">
+
+            <div class="score fail">
+                Contextual Precision: 0.57
+            </div>
+
+            <div class="reason">
+                The score is 0.57 because while the first node provides relevant information about the Bo105's loss of lift, the subsequent nodes contain irrelevant content, such as 'El documento SR-2024-012 trata sobre problemas de compilación en Linux' (2nd node) and 'El documento SR-2024-001 se centra en problemas de rendimiento del simulador en Windows 11' (3rd node), which detracts from the overall relevance. The presence of multiple irrelevant nodes ranked higher than the relevant ones affects the score, but the inclusion of two relevant nodes ensures that the score remains above average.
+            </div>
+
+        </div>
+        
+        <div class="metric">
+
+            <div class="score pass">
+                Contextual Recall: 0.71
+            </div>
+
+            <div class="reason">
+                The score is 0.71 because while several sentences in the expected output align well with the information from node(s) in retrieval context, such as the behavior of the Bo105 and the simulation details, there are gaps regarding the uncertainties and confidence level that are not addressed in the nodes.
+            </div>
+
+        </div>
+        </div>
+    <div class="case">
+
+        <h2>
+            <span class="fail">
+                [FAIL]
+            </span>
+            Caso 6
+        </h2>
+
+        <p><strong>Input:</strong></p>
+
+        <pre>La Cessna entra en barrena cuando intento practicar maniobras de pérdida y no sé cómo recuperarla.</pre>
+
+        <p><strong>Actual Output:</strong></p>
+
+        <pre>Reported Behavior:
+The user reports that the Cessna aircraft enters a spin (barrena) unexpectedly when attempting stall practice maneuvers and that they do not know how to recover from it.
+
+Expected Behavior:
+According to documentation, the Cessna 172 (and similar light aircraft) should have benign stall characteristics and are unlikely to enter into a spin during stall maneuvers if handled correctly. The aircraft is expected to maintain a controlled stall without devolving into a spin. For spin recovery, the recommended procedure is to apply rudder opposite to the spin direction (timón contrario), reduce angle of attack by lowering the nose, and only recover normal flight once the spin rotation has stopped. Power (throttle) should not be applied until spin rotation ceases.
+
+Identified Deviation:
+The aircraft unexpectedly enters a spin during stall practice despite stall maneuvers typically not causing a spin in a Cessna 172 under correct technique. The deviation is classified as an "unexpected behavior" during stall practice.
+
+Historical Alignment:
+A historical case SR-2024-015 indicates that the Cessna 172P model in the simulation can enter a spin during stall if simultaneous inputs of aileron and rudder exacerbate the differential wing stall and yawing moment. This behavior is by design in the flight dynamics model (JSBSim) to realistically simulate spins induced by improper control inputs during stall. This matches the reported behavior showing historical alignment with known simulator dynamics rather than a software bug.
+
+Technical Hypothesis:
+The aircraft enters a spin during stall due to combined aileron and rudder input during the maneuver, creating an uncoordinated stall leading to spin entry. The use of ailerons to lift the low wing during stall introduces differential lift loss and yawing moment enhanced by rudder application, producing autorotation. The user may not be correctly applying the spin recovery procedure which requires counteracting rudder and forward elevator to reduce angle of attack and stop rotation before applying power and recovering normal flight.
+
+Uncertainties:
+- The exact control inputs applied by the user during the stall are unknown.
+- The altitude and airspeed during the stall practice are not specified.
+- Whether the user has practiced or is aware of the spin recovery procedure remains unclear.
+- The specific Cessna model (e.g., 172P) and simulator version are not detailed.
+
+Confidence Level:
+0.85 - The diagnosis aligns well with documented flight dynamics behavior and confirmed known simulator characteristics but lacks exact user input and operational detail for full certainty.</pre>
+
+        <p><strong>Expected Output:</strong></p>
+
+        <pre>Reported Behavior: La Cessna 172P entra en barrena durante maniobras de práctica de pérdida y no es posible recuperar el control.
+Expected Behavior: El modelo JSBSim de la C172P permite recuperación de barrena siguiendo el procedimiento correcto de reducción de ángulo de ataque y aplicación de timón contrario.
+Identified Deviation: Aplicación simultánea de alerón y timón de cola durante la pérdida induce la barrena según BUG-119.
+Historical Alignment: SR-2024-015 documenta exactamente este comportamiento en el modelo JSBSim.
+Technical Hypothesis: La pérdida diferencial entre alas combinada con el par del timón induce la barrena. El modelo aerodinámico simula este comportamiento de forma realista.
+Uncertainties: Sin conocer la altitud AGL no es posible determinar si la recuperación era viable.
+Confidence Level: 0.93</pre>
+
+        <h3>Métricas</h3>
+    
+        <div class="metric">
+
+            <div class="score pass">
+                Faithfulness: 1.00
+            </div>
+
+            <div class="reason">
+                The score is 1.00 because there are no contradictions present, indicating that the actual output aligns perfectly with the retrieval context.
+            </div>
+
+        </div>
+        
+        <div class="metric">
+
+            <div class="score pass">
+                Answer Relevancy: 1.00
+            </div>
+
+            <div class="reason">
+                The score is 1.00 because the response directly addresses the issue of recovering from a stall in a Cessna without including any irrelevant information.
+            </div>
+
+        </div>
+        
+        <div class="metric">
+
+            <div class="score fail">
+                Contextual Precision: 0.10
+            </div>
+
+            <div class="reason">
+                The score is 0.10 because all nodes except one are irrelevant to the input regarding the Cessna entering a spin. Specifically, the first node discusses 'problems of position in multiplayer mode,' which is unrelated to the spin maneuver, and this pattern continues with subsequent nodes discussing various unrelated issues. The only relevant node, ranked 11th, describes 'the behavior of the Cessna 172P entering a spin during loss maneuvers,' which is directly pertinent. However, since it is ranked much lower than the irrelevant nodes, the overall score remains low.
+            </div>
+
+        </div>
+        
+        <div class="metric">
+
+            <div class="score pass">
+                Contextual Recall: 0.71
+            </div>
+
+            <div class="reason">
+                The score is 0.71 because while the majority of the expected output aligns well with the 15th node in the retrieval context, the uncertainties regarding AGL altitude and the confidence level do not connect to any nodes, indicating some gaps in contextual support.
+            </div>
+
+        </div>
+        </div>
+    <div class="case">
+
+        <h2>
+            <span class="pass">
+                [PASS]
+            </span>
+            Caso 7
+        </h2>
+
+        <p><strong>Input:</strong></p>
+
+        <pre>¿Qué modelos de dinámica de vuelo soporta FlightGear?</pre>
+
+        <p><strong>Actual Output:</strong></p>
+
+        <pre>Functional Explanation:
+FlightGear supports multiple flight dynamics models (FDMs) which can be configured during the use of the simulator. The main supported models are:
+
+1. JSBsim: A popular data-driven flight dynamics model developed by Jon Berndt under the JSBSim project. It produces aircraft dynamics based on aircraft performance data including mass, balance, propulsion, aerodynamics, etc.
+
+2. LaRCsim: The original flight dynamics model used in FlightGear until 2002, developed by NASA. It had limitations since much was hardcoded instead of configured via files.
+
+3. YASim: Developed around 2001 to provide a simpler, fluid dynamics-based flight model with easier usage. It offers models for various aircraft like Boeing 747, A4, and DC-3.
+
+4. UIUC model: Developed by a University of Illinois at Urbana-Champaign team, this model incorporates nonlinear aerodynamics modeling for realistic behaviors in extreme flight conditions (e.g., stall and limit angles of attack). It includes specialized aircraft models like the Airwave Xtreme 150 hang glider and the Wright Brothers 1903 plane.
+
+5. Magic Carpet (Magic): A special-purpose simplified flight model useful for scenario creators who want to move in the virtual world without physics concerns. It has been replaced by the "ufo" model.
+
+6. Network model: Opens a UDP network protocol interface to receive flight dynamics data from an external program and feed it into FlightGear.
+
+It is also possible to connect FlightGear to an external FDM running locally via a pipe, though this is not recommended for beginners.
+
+Configuration / Limits:
+- The flight dynamics model can be configured at runtime in the simulator.
+- Each model offers different levels of realism and complexity.
+- The network FDM uses a UDP interface with configurable host and port parameters.
+- The Magic Carpet model is simplified and used mainly for convenience in scenarios.
+- The UIUC model focuses on nonlinear aerodynamics and extreme flight conditions.
+- The LaRCsim model is legacy and has limitations compared to newer models.
+- The JSBsim model is data-driven and probably the most popular among users.
+
+Relevant Documentation References:
+- FlightGear User Manual, Section 2.4 "Modelos de dinámica de vuelo," pages approx. 474-506 and 1192-1206.
+- Details about JSBSim project at http://jsbsim.sourceforge.net/
+- UIUC flight model details at https://m-selig.ae.illinois.edu/apasim/Aircraft-uiuc.html
+
+Confidence Level: 1 (Based on direct documentation excerpts from FlightGear manual)</pre>
+
+        <p><strong>Expected Output:</strong></p>
+
+        <pre>Functional Explanation: FlightGear soporta múltiples modelos de dinámica de vuelo. JSBSim es el modelo principal para aeronaves de ala fija con simulación aerodinámica detallada. YASim es el modelo alternativo usado en helicópteros y algunas aeronaves de ala fija.
+Configuration / Limits: El modelo se selecciona por aeronave en el fichero de configuración XML. No es configurable en tiempo de ejecución.
+Relevant Documentation References: Capítulo 2, sección 2.4 Modelos de dinámica de vuelo del Manual de FlightGear.
+Confidence Level: 0.9</pre>
+
+        <h3>Métricas</h3>
+    
+        <div class="metric">
+
+            <div class="score pass">
+                Faithfulness: 0.85
+            </div>
+
+            <div class="reason">
+                The score is 0.85 because the actual output inaccurately includes 'Magic Carpet' as a flight dynamics model, while the context only refers to it as a simplified model for scenario creators. Additionally, it incorrectly attributes the development of LaRCsim to NASA, which is not supported by the context. Furthermore, the output claims that the Magic Carpet model is useful, despite the context stating it has been replaced by the 'ufo' model.
+            </div>
+
+        </div>
+        
+        <div class="metric">
+
+            <div class="score pass">
+                Answer Relevancy: 0.88
+            </div>
+
+            <div class="reason">
+                The score is 0.88 because while the response provides some relevant information about FlightGear, it includes statements that stray from the main question regarding supported flight dynamics models, such as discussing limitations of LaRCsim and the replacement of the Magic Carpet model.
+            </div>
+
+        </div>
+        
+        <div class="metric">
+
+            <div class="score pass">
+                Contextual Precision: 0.86
+            </div>
+
+            <div class="reason">
+                The score is 0.86 because while the relevant nodes are well-represented and provide substantial information about the flight dynamics models supported by FlightGear, there are several irrelevant nodes that rank higher than some relevant ones. For instance, the first node provides a direct answer about the models supported, but the fourth node, which does not relate to flight dynamics models, is ranked lower than relevant nodes. This affects the overall precision score, as it indicates that not all relevant information is prioritized over irrelevant content.
+            </div>
+
+        </div>
+        
+        <div class="metric">
+
+            <div class="score pass">
+                Contextual Recall: 1.00
+            </div>
+
+            <div class="reason">
+                The score is 1.00 because all sentences in the expected output are well-supported by the corresponding nodes in the retrieval context, demonstrating a strong alignment with the provided information.
+            </div>
+
+        </div>
+        </div>
+    <div class="case">
+
+        <h2>
+            <span class="fail">
+                [FAIL]
+            </span>
+            Caso 8
+        </h2>
+
+        <p><strong>Input:</strong></p>
+
+        <pre>¿Ha habido alguna incidencia con el piloto automático de la Cessna 172P?</pre>
+
+        <p><strong>Actual Output:</strong></p>
+
+        <pre>Historical Summary:
+There is a documented incident specifically concerning the autopilot of the Cessna 172P (SR-2024-004). The issue reports that the autopilot does not maintain altitude correctly and causes continuous oscillation without stabilizing when altitude hold mode is activated.
+
+Recurring Patterns:
+The primary pattern is instability of the autopilot's altitude hold function when activated under certain conditions — particularly when the initial vertical speed is above 500 ft/min. This is due to the PID controller coefficients not being optimized for higher vertical rates at activation.
+
+Typical Resolutions:
+The recommended mitigation is to manually stabilize the aircraft first with a vertical speed under 200 ft/min before activating altitude hold. It is also advised to activate heading hold mode first to stabilize the aircraft, then activate altitude hold. Additionally, a workaround script through the property tree is available for configuration.
+
+Relevance to Current Case:
+This historical case directly involves the autopilot of a Cessna 172P and addresses an issue causing operational instability (incidencia) with altitude maintenance, which aligns closely with the query about autopilot issues. No other direct autopilot-related incidents for this aircraft were found.
+
+Confidence Level: 1</pre>
+
+        <p><strong>Expected Output:</strong></p>
+
+        <pre>Historical Summary: SR-2024-004 documenta inestabilidad del controlador PID del piloto automático en modo altitud en la Cessna 172P cuando la velocidad vertical supera 500 ft/min en el momento de activación.
+Recurring Patterns: Activación del piloto automático en condiciones de alta tasa de ascenso sin estabilización previa.
+Typical Resolutions: Estabilizar la aeronave en vuelo nivelado con velocidad vertical inferior a 200 ft/min antes de activar el modo altitud. Usar property tree /autopilot/settings/target-altitude-ft como workaround.
+Relevance to Current Case: Alta. El patrón coincide directamente con BUG-031.
+Confidence Level: 0.95</pre>
+
+        <h3>Métricas</h3>
+    
+        <div class="metric">
+
+            <div class="score pass">
+                Faithfulness: 1.00
+            </div>
+
+            <div class="reason">
+                The score is 1.00 because there are no contradictions present, indicating that the actual output aligns perfectly with the retrieval context.
+            </div>
+
+        </div>
+        
+        <div class="metric">
+
+            <div class="score pass">
+                Answer Relevancy: 0.91
+            </div>
+
+            <div class="reason">
+                The score is 0.91 because the output included a statement about no other incidents, which does not directly address the question regarding any incidents with the autopilot of the Cessna 172P.
+            </div>
+
+        </div>
+        
+        <div class="metric">
+
+            <div class="score fail">
+                Contextual Precision: 0.25
+            </div>
+
+            <div class="reason">
+                The score is 0.25 because the relevant node, which is the fourth node, is significantly outnumbered by irrelevant nodes that are ranked higher. The first three nodes discuss unrelated issues such as a helicopter and engine start problems, which detracts from the overall relevance of the results. The relevant node specifically addresses the instability of the autopilot in the Cessna 172P, stating that 'el controlador PID del módulo de mantenimiento de altitud presenta inestabilidad cuando la velocidad vertical inicial supera 500 ft/min', making it crucial for the query. However, the presence of multiple irrelevant nodes before it lowers the score.
+            </div>
+
+        </div>
+        
+        <div class="metric">
+
+            <div class="score pass">
+                Contextual Recall: 0.80
+            </div>
+
+            <div class="reason">
+                The score is 0.80 because while the majority of the sentences in the expected output are well-supported by node(s) in retrieval context, such as the references to 'inestabilidad del controlador PID' and the resolution to stabilize the aircraft, the confidence level of '0.95' does not have a corresponding mention in the nodes, which slightly detracts from the overall alignment.
+            </div>
+
+        </div>
+        </div>
+    <div class="case">
+
+        <h2>
+            <span class="pass">
+                [PASS]
+            </span>
+            Caso 9
+        </h2>
+
+        <p><strong>Input:</strong></p>
+
+        <pre>¿Cómo se configura la variable FG_ROOT en Windows?</pre>
+
+        <p><strong>Actual Output:</strong></p>
+
+        <pre>Explicación Funcional:
+La variable de entorno FG_ROOT se utiliza para indicar a FlightGear la ubicación del paquete base de datos (FG-Data). Esto puede ser necesario cuando no se usa el lanzador integrado o cuando FlightGear no puede encontrar automáticamente sus archivos de datos. En lugar de pasar la opción --fg-root al ejecutar fgfs, se puede configurar esta variable de entorno para que FlightGear sepa dónde buscar los datos base.
+
+Configuración en Windows:
+Aunque la documentación recuperada da ejemplos principalmente para terminales estilo Bourne y C (Linux/macOS), la configuración en Windows debe realizarse mediante la configuración de variables de entorno del sistema o del usuario. En Windows, esto usualmente se hace así:
+1. Abrir "Configuración avanzada del sistema".
+2. Ir a "Variables de entorno".
+3. Crear una nueva variable (o editar si ya existe) con nombre FG_ROOT.
+4. Asignar como valor la ruta del directorio donde están los archivos FG-Data.
+Por ejemplo, si FG-Data está en C:\Program Files\FlightGear\data, ese debe ser el valor de FG_ROOT.
+
+No obstante, el documento no detalla explícitamente pasos para Windows, sólo menciona que configurar variables de entorno depende del sistema operativo y shell utilizado.
+
+Configuración / Límites:
+- Si has compilado FlightGear y pasado la ruta de datos con CMake, puede que no sea necesario configurar FG_ROOT.
+- Si no se configura correctamente FG_ROOT, y no se usa --fg-root, FlightGear puede no encontrar sus archivos base.
+- En Windows, la configuración es a nivel de variables de entorno del sistema o usuario, no mediante comandos shell tipo export o setenv.
+
+Referencias relevantes:
+- Sección 4.2.1 "FG_ROOT" donde se menciona la función de FG_ROOT y ejemplos en terminales Bourne/C.
+- Indicación general sobre configuración de variables de entorno según plataforma.
+- No hay instrucciones específicas para Windows en el extracto, pero se entiende que es por variables entorno sistema.
+
+Nivel de confianza: 0.8  
+(El documento explica bien FG_ROOT y su uso general y da ejemplos en sistemas Unix-like, pero no detalla el paso a paso para Windows, por lo que se infiere la forma estándar en Windows para variables entorno.)</pre>
+
+        <p><strong>Expected Output:</strong></p>
+
+        <pre>Functional Explanation: FG_ROOT es la variable de entorno que indica a FlightGear la ubicación del directorio de datos del simulador. Sin ella correctamente configurada el simulador no puede localizar sus ficheros y termina silenciosamente.
+Configuration / Limits: Se define en autoexec.bat con la sintaxis set FG_ROOT=C:\FlightGear\data, o mediante el fichero fgfsrc, o desde el lanzador fgrun.exe.
+Relevant Documentation References: Capítulo 4, sección 4.2.1 FG_ROOT del Manual de FlightGear.
+Confidence Level: 0.95</pre>
+
+        <h3>Métricas</h3>
+    
+        <div class="metric">
+
+            <div class="score pass">
+                Faithfulness: 1.00
+            </div>
+
+            <div class="reason">
+                The score is 1.00 because there are no contradictions present, indicating that the actual output aligns perfectly with the retrieval context.
+            </div>
+
+        </div>
+        
+        <div class="metric">
+
+            <div class="score pass">
+                Answer Relevancy: 1.00
+            </div>
+
+            <div class="reason">
+                The score is 1.00 because the response directly addresses the question about configuring the FG_ROOT variable in Windows without any irrelevant statements.
+            </div>
+
+        </div>
+        
+        <div class="metric">
+
+            <div class="score pass">
+                Contextual Precision: 1.00
+            </div>
+
+            <div class="reason">
+                The score is 1.00 because all relevant nodes are ranked higher than the irrelevant nodes. The first four nodes provide comprehensive information on configuring the FG_ROOT variable, including specific instructions and the importance of the variable, while the subsequent nodes do not address the configuration directly, such as the fifth node which states, '4.4. OPCIONES DE LA LÍNEA DE COMANDOS does not provide specific information about configuring FG_ROOT, making it less relevant to the question.' This clear distinction in relevance supports the high score.
+            </div>
+
+        </div>
+        
+        <div class="metric">
+
+            <div class="score pass">
+                Contextual Recall: 0.75
+            </div>
+
+            <div class="reason">
+                The score is 0.75 because while the explanations for FG_ROOT and its configuration are well-supported by nodes 1 and 2 in the retrieval context, the confidence level mentioned in the expected output does not have a corresponding node, which affects the overall contextual recall.
+            </div>
+
+        </div>
+        </div>
+</body>
+</html>
