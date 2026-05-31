@@ -108,7 +108,33 @@ Los resultados muestran una elevada fidelidad al contexto recuperado y una buena
 ## Estructura del repositorio
 
 ```text
-docs/
-evaluation/
-workflows/
-Final Project
+ISSFinder-TFM/
+│
+├── README.md
+│
+├── docs/
+│   ├── memoria.pdf
+│   ├── deepeval-results.html
+│   └── images/
+│
+├── evaluation/
+│
+└── workflows/
+```
+
+## Líneas de evolución
+
+- Uso de modelos open-source self-hosted.
+- Despliegue completamente on-premise.
+- Incorporación de métricas avanzadas de observabilidad.
+- Monitorización de costes y latencias.
+- Optimización del retrieval mediante técnicas de re-ranking.
+- Evaluación continua del sistema.
+
+## Autora
+
+**Belén Quintas Herraiz**
+
+Máster en IA Generativa (2025-2026)
+
+Proyecto Final
